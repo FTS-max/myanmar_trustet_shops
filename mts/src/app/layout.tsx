@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import AuthButtons from "@/components/auth/AuthButtons";
 import AuthProvider from "@/components/auth/AuthProvider";
+import NotificationProvider from "@/components/notifications/NotificationProvider";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +34,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-        <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
+          <NotificationProvider>
+            <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               {/* Logo and Brand */}
@@ -47,13 +50,17 @@ export default function RootLayout({
                 {/* Navigation links removed as requested */}
               </nav>
               
-              {/* Auth Buttons */}
-              <AuthButtons />
+              {/* Notifications and Auth */}
+              <div className="flex items-center space-x-4">
+                <NotificationBell />
+                <AuthButtons />
+              </div>
 
             </div>
           </div>
-        </header>
-        {children}
+            </header>
+            {children}
+          </NotificationProvider>
         </AuthProvider>
       </body>
     </html>

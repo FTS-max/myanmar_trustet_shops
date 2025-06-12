@@ -2,48 +2,21 @@ import React from 'react'
 import ShopCard from '@/components/shops/ShopCard'
 import ShopFilter from '@/components/shops/ShopFilter'
 import Pagination from '@/components/shops/Pagination'
+import { shops } from '@/lib/data'
 
-// This would be replaced with actual data fetching in a real implementation
+// Get shops with server-side data fetching
 const getShops = async () => {
-  // Mock data for demonstration
-  return [
-    {
-      id: '1',
-      name: 'ABC Electronics',
-      description: 'Trusted electronics store in Yangon',
-      address: '123 Main St, Yangon',
-      trustLevel: 'Gold',
-      categories: ['Electronics', 'Home Appliances'],
-      imageUrl: '/images/shops/abc-electronics.jpg'
-    },
-    {
-      id: '2',
-      name: 'Fresh Grocery',
-      description: 'Quality grocery store with fresh products',
-      address: '456 Park Avenue, Mandalay',
-      trustLevel: 'Silver',
-      categories: ['Grocery', 'Food'],
-      imageUrl: '/images/shops/fresh-grocery.jpg'
-    },
-    {
-      id: '3',
-      name: 'Fashion World',
-      description: 'Latest fashion trends and accessories',
-      address: '789 Style Street, Yangon',
-      trustLevel: 'Gold',
-      categories: ['Fashion', 'Accessories'],
-      imageUrl: '/images/shops/fashion-world.jpg'
-    },
-    {
-      id: '4',
-      name: 'Tech Solutions',
-      description: 'IT services and computer repairs',
-      address: '101 Digital Road, Mandalay',
-      trustLevel: 'Bronze',
-      categories: ['IT Services', 'Repairs'],
-      imageUrl: '/images/shops/tech-solutions.jpg'
-    }
-  ];
+  // In a real implementation, this would fetch from a database
+  // For now, we're using the data from our data.ts file
+  return shops.map(shop => ({
+    id: shop.id,
+    name: shop.name,
+    description: shop.description,
+    address: `${shop.location.address}, ${shop.location.township}, ${shop.location.city}`,
+    trustLevel: shop.trustLevel,
+    categories: shop.categories,
+    imageUrl: shop.images[0] || '/images/placeholder-shop.jpg'
+  }));
 };
 
 // Shop listing page component

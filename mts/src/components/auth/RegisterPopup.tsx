@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from './AuthProvider';
 
 interface RegisterPopupProps {
   isOpen: boolean;
@@ -9,11 +10,18 @@ interface RegisterPopupProps {
 }
 
 export default function RegisterPopup({ isOpen, onClose, onLoginClick }: RegisterPopupProps) {
+  const { login, isLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     shopName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    phoneNumber: '',
+    address: '',
+    city: '',
+    state: ''
   });
   
   if (!isOpen) return null;
@@ -21,32 +29,57 @@ export default function RegisterPopup({ isOpen, onClose, onLoginClick }: Registe
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user types
+    if (error) setError('');
   };
   
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     // Validate form
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      setError('Passwords do not match');
       return;
     }
     
-    // Redirect to Auth0 signup
-    window.location.href = '/api/auth/signup';
+    try {
+      setIsSubmitting(true);
+      
+      // Register the user with Auth0
+      // In a real implementation, we would call an API endpoint to register the user
+      // For now, we'll just redirect to Auth0 login
+      login();
+      
+      // Close the popup
+      onClose();
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError('Registration failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-xl font-bold mb-4">Register as Partnership Shop</h2>
-        
-        <div className="mb-4 p-3 bg-yellow-50 text-yellow-800 rounded border border-yellow-200">
-          <p className="font-medium">Auth0 Integration Temporarily Unavailable</p>
-          <p className="text-sm mt-1">The authentication system is currently being set up. Please check back later.</p>
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Register as Partnership Shop</h2>
+          <button 
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </button>
         </div>
         
-        <form onSubmit={handleRegister}>
-          <div className="mb-4">
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 text-red-800 rounded border border-red-200">
+            <p>{error}</p>
+          </div>
+        )}
+        
+        <form onSubmit={handleRegister} className="space-y-4">
+          <div>
             <label className="block text-sm font-medium mb-1">Shop Name</label>
             <input
               type="text"
@@ -58,7 +91,7 @@ export default function RegisterPopup({ isOpen, onClose, onLoginClick }: Registe
             />
           </div>
           
-          <div className="mb-4">
+          <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input
               type="email"
@@ -70,7 +103,57 @@ export default function RegisterPopup({ isOpen, onClose, onLoginClick }: Registe
             />
           </div>
           
-          <div className="mb-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Phone Number</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-1">Address</label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">State/Region</label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+          </div>
+          
+          <div>
             <label className="block text-sm font-medium mb-1">Password</label>
             <input
               type="password"
@@ -79,10 +162,12 @@ export default function RegisterPopup({ isOpen, onClose, onLoginClick }: Registe
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required
+              minLength={8}
             />
+            <p className="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
           </div>
           
-          <div className="mb-4">
+          <div>
             <label className="block text-sm font-medium mb-1">Confirm Password</label>
             <input
               type="password"
@@ -96,13 +181,14 @@ export default function RegisterPopup({ isOpen, onClose, onLoginClick }: Registe
           
           <button 
             type="submit"
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mb-4"
+            disabled={isSubmitting || isLoading}
+            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-400"
           >
-            Register
+            {isSubmitting ? 'Registering...' : 'Register'}
           </button>
         </form>
         
-        <p className="text-center">
+        <p className="mt-4 text-center">
           Already have an account?{' '}
           <button 
             onClick={onLoginClick}
