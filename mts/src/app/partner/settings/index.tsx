@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { FiUser, FiLock, FiMail, FiPhone, FiShield, FiSave } from 'react-icons/fi';
 
 const SettingsPage = () => {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState('account');
   const [formData, setFormData] = useState({
     name: 'Shop Owner',
@@ -20,7 +18,7 @@ const SettingsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -28,7 +26,7 @@ const SettingsPage = () => {
     }));
   };
 
-  const handleAccountUpdate = async (e) => {
+  const handleAccountUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage({ type: '', text: '' });
@@ -45,7 +43,7 @@ const SettingsPage = () => {
     // const response = await updateUserProfile(formData);
   };
 
-  const handlePasswordUpdate = async (e) => {
+  const handlePasswordUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setMessage({ type: '', text: '' });

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from './AuthProvider';
 
@@ -11,7 +10,6 @@ interface LoginPopupProps {
 }
 
 export default function LoginPopup({ isOpen, onClose, onRegisterClick }: LoginPopupProps) {
-  const router = useRouter();
   const { login, isLoading } = useAuth();
   const [isPartnershipShop, setIsPartnershipShop] = useState(false);
   const [email, setEmail] = useState('');
@@ -99,7 +97,7 @@ export default function LoginPopup({ isOpen, onClose, onRegisterClick }: LoginPo
             <div className="mt-4 text-center">
               <p>Or</p>
               <button 
-                onClick={login}
+                onClick={() => login()}
                 disabled={isLoading}
                 className="mt-2 w-full px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900 disabled:bg-gray-600"
               >
@@ -108,7 +106,7 @@ export default function LoginPopup({ isOpen, onClose, onRegisterClick }: LoginPo
             </div>
             
             <p className="mt-4 text-center">
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <button 
                 onClick={onRegisterClick}
                 className="text-blue-600 hover:underline"

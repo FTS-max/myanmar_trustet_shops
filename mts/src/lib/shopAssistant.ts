@@ -1,4 +1,4 @@
-import { Shop, getShopById, TrustLevel } from './data';
+import { getShopById, TrustLevel } from './data';
 
 /**
  * Generates a context-aware system prompt for the OpenAI assistant based on the current shop
@@ -61,12 +61,16 @@ function getTrustLevelDescription(trustLevel: TrustLevel): string {
   }
 }
 
+interface BusinessHours {
+  [key: string]: string;
+}
+
 /**
  * Formats business hours into a readable string
  * @param hours The business hours object
  * @returns A formatted string of business hours
  */
-function formatBusinessHours(hours: any): string {
+function formatBusinessHours(hours: BusinessHours): string {
   if (!hours) return 'Not available';
   
   const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -78,12 +82,16 @@ function formatBusinessHours(hours: any): string {
   return formattedHours || 'Not available';
 }
 
+interface SocialMedia {
+  [key: string]: string | undefined;
+}
+
 /**
  * Formats social media links into a readable string
  * @param socialMedia The social media object
  * @returns A formatted string of social media platforms
  */
-function formatSocialMedia(socialMedia: any): string {
+function formatSocialMedia(socialMedia: SocialMedia): string {
   if (!socialMedia) return 'Not available';
   
   const platforms = Object.keys(socialMedia)

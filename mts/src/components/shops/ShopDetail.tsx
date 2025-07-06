@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react'
-import Link from 'next/link'
+import Image from 'next/image';
 // Note: We're not importing MapSection here because the data structure doesn't match yet
 
 interface ShopDetailProps {
@@ -36,9 +36,11 @@ const ShopDetail: React.FC<ShopDetailProps> = ({ shop }) => {
         <div className="h-64 w-full bg-gradient-to-r from-blue-500 to-purple-600">
           {shop.imageUrl && (
             <div className="absolute inset-0 opacity-20">
-              <img 
-                src={shop.imageUrl} 
-                alt="" 
+              <Image
+                src={shop.imageUrl}
+                alt=""
+                width={1024}
+                height={256}
                 className="h-full w-full object-cover"
               />
             </div>

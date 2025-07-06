@@ -13,6 +13,16 @@ interface NotificationFilters {
   search: string;
 }
 
+interface Notification {
+  id: string;
+  type: string;
+  read: boolean;
+  title: string;
+  message: string;
+  timestamp: Date;
+  actionUrl?: string;
+}
+
 const NotificationsPage: React.FC = () => {
   const { user, isLoading } = useUser();
   const router = useRouter();
@@ -38,7 +48,7 @@ const NotificationsPage: React.FC = () => {
     setIsRefreshing(false);
   };
 
-  const filteredNotifications = notifications.filter(notification => {
+  const filteredNotifications = notifications.filter((notification: Notification) => {
     // Type filter
     if (filters.type !== 'all' && notification.type !== filters.type) {
       return false;
@@ -88,7 +98,7 @@ const NotificationsPage: React.FC = () => {
     return `${baseClass} ${borderClass}`;
   };
 
-  const handleNotificationClick = (notification: any) => {
+  const handleNotificationClick = (notification: Notification) => {
     if (!notification.read) {
       markAsRead(notification.id);
     }

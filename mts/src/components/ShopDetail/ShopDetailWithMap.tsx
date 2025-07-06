@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { MapSection } from './index';
-import { Shop, TrustLevel } from '@/lib/data';
+import { Shop } from '@/lib/data';
+import Image from 'next/image';
 
 interface ShopDetailWithMapProps {
   shop: Shop;
@@ -15,9 +16,11 @@ const ShopDetailWithMap: React.FC<ShopDetailWithMapProps> = ({ shop }) => {
         <div className="md:flex-shrink-0">
           <div className="h-48 w-full md:w-48 bg-gray-300 flex items-center justify-center">
             {shop.logoUrl ? (
-              <img 
-                src={shop.logoUrl} 
-                alt={shop.name} 
+              <Image
+                src={shop.logoUrl}
+                alt={shop.name}
+                width={192}
+                height={192}
                 className="h-full w-full object-cover"
               />
             ) : (

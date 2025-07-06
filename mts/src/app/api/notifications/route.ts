@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
-import { getSession } from '@auth0/nextjs-auth0/server';
+import { getSession } from '@auth0/nextjs-auth0';
 
 interface Notification {
   _id?: ObjectId;
@@ -12,13 +12,18 @@ interface Notification {
   read: boolean;
   timestamp: Date;
   actionUrl?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
+}
+
+interface NotificationFilter {
+  userId: string;
+  read?: boolean;
 }
 
 // GET - Fetch notifications for the authenticated user
 export async function GET(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await getSession(request, new NextResponse());
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -32,7 +37,7 @@ export async function GET(request: NextRequest) {
     const { db } = await dbConnect();
     const collection = db.collection<Notification>('notifications');
 
-    const filter: any = { userId: session.user.sub };
+    const filter: NotificationFilter = { userId: session.user.sub };
     if (unreadOnly) {
       filter.read = false;
     }
@@ -72,7 +77,7 @@ export async function GET(request: NextRequest) {
 // POST - Create a new notification
 export async function POST(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await getSession(request, new NextResponse());
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -117,7 +122,7 @@ export async function POST(request: NextRequest) {
 // PATCH - Update notification (mark as read/unread)
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await getSession(request, new NextResponse());
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -176,7 +181,7 @@ export async function PATCH(request: NextRequest) {
 // DELETE - Delete notification(s)
 export async function DELETE(request: NextRequest) {
   try {
-    const session = await getSession();
+    const session = await getSession(request, new NextResponse());
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

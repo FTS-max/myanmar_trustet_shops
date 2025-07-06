@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import ChatBubble from '@/components/Assistant/ChatBubble';
 
@@ -15,7 +14,7 @@ export default function Home() {
               Myanmar Trusted Shop
             </h1>
             <p className="text-lg md:text-xl opacity-90">
-              Discover verified and trustworthy shops in Myanmar. Building trust in Myanmar's digital economy.
+              Discover verified and trustworthy shops in Myanmar. Building trust in Myanmar&apos;s digital economy.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link href="/directory" className="bg-white text-purple-700 hover:bg-purple-50 px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md hover:shadow-lg">
@@ -191,7 +190,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">Myanmar Trusted Shop</h3>
-              <p className="text-gray-400 mt-1">Building trust in Myanmar's digital economy</p>
+              <p className="text-gray-400 mt-1">Building trust in Myanmar&apos;s digital economy</p>
             </div>
             <div className="flex gap-6">
               <Link href="/about" className="text-gray-300 hover:text-white transition duration-300">

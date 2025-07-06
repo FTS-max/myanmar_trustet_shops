@@ -1,5 +1,5 @@
+import { getSession } from '@auth0/nextjs-auth0';
 import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@auth0/nextjs-auth0/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 
@@ -10,7 +10,7 @@ import User from '@/models/User';
 export async function POST(req: NextRequest) {
   try {
     // Get the current Auth0 session
-    const session = await getSession();
+    const session = await getSession(req, new NextResponse());
     
     // If no session, user is not authenticated
     if (!session || !session.user) {

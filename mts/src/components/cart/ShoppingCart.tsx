@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FiShoppingCart, FiX, FiPlus, FiMinus, FiTrash2 } from 'react-icons/fi';
+import Image from 'next/image';
 
 interface CartItem {
   id: string;
@@ -121,9 +122,11 @@ const ShoppingCart: React.FC<ShoppingCartProps> = ({ isOpen, onClose }) => {
                     {/* Product Image */}
                     <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                       {item.image ? (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.name}
+                          width={64}
+                          height={64}
                           className="h-full w-full object-cover object-center"
                         />
                       ) : (

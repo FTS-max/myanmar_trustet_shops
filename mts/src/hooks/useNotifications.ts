@@ -9,7 +9,7 @@ export interface Notification {
   read: boolean;
   timestamp: Date;
   actionUrl?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface NotificationHook {
@@ -47,9 +47,9 @@ export const useNotifications = (): NotificationHook => {
       }
 
       const data = await response.json();
-      const formattedNotifications = data.notifications.map((n: any) => ({
+      const formattedNotifications = data.notifications.map((n: Notification) => ({
         ...n,
-        id: n._id,
+        id: n.id,
         timestamp: new Date(n.timestamp)
       }));
 

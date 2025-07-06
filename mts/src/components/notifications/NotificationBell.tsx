@@ -5,6 +5,16 @@ import { FiBell, FiX, FiCheck, FiTrash2, FiShoppingBag, FiUser, FiInfo, FiAlertT
 import { useNotifications } from './NotificationProvider';
 import { formatDistanceToNow } from 'date-fns';
 
+interface Notification {
+  id: string;
+  type: string;
+  read: boolean;
+  title: string;
+  message: string;
+  timestamp: Date;
+  actionUrl?: string;
+}
+
 const NotificationBell: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -39,24 +49,7 @@ const NotificationBell: React.FC = () => {
     }
   };
 
-  const getNotificationBgColor = (type: string) => {
-    switch (type) {
-      case 'order':
-        return 'bg-blue-50 border-blue-200';
-      case 'shop':
-        return 'bg-purple-50 border-purple-200';
-      case 'success':
-        return 'bg-green-50 border-green-200';
-      case 'warning':
-        return 'bg-yellow-50 border-yellow-200';
-      case 'error':
-        return 'bg-red-50 border-red-200';
-      default:
-        return 'bg-gray-50 border-gray-200';
-    }
-  };
-
-  const handleNotificationClick = (notification: any) => {
+  const handleNotificationClick = (notification: Notification) => {
     if (!notification.read) {
       markAsRead(notification.id);
     }
@@ -116,7 +109,7 @@ const NotificationBell: React.FC = () => {
               <div className="px-4 py-8 text-center text-gray-500">
                 <FiBell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p>No notifications yet</p>
-                <p className="text-sm">We'll notify you when something important happens</p>
+                <p className="text-sm">We&apos;ll notify you when something important happens</p>
               </div>
             ) : (
               notifications.map((notification) => (
@@ -152,7 +145,7 @@ const NotificationBell: React.FC = () => {
                         {notification.message}
                       </p>
                       <p className="text-xs text-gray-500 mt-2">
-                        {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
+                        {formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })}
                       </p>
                     </div>
                     {!notification.read && (

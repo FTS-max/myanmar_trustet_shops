@@ -5,7 +5,7 @@ export interface NotificationData {
   message: string;
   type?: 'info' | 'success' | 'warning' | 'error' | 'order' | 'shop';
   actionUrl?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   targetUserId?: string; // For admin notifications to specific users
 }
 
@@ -55,7 +55,7 @@ class NotificationService {
   }
 
   async notifyOrderStatusUpdate(orderId: string, status: string, shopName: string): Promise<boolean> {
-    const statusMessages = {
+    const statusMessages: Record<string, string> = {
       confirmed: 'Your order has been confirmed by the shop.',
       preparing: 'Your order is being prepared.',
       ready: 'Your order is ready for pickup/delivery.',
@@ -65,7 +65,7 @@ class NotificationService {
 
     return this.notify({
       title: 'Order Status Update',
-      message: statusMessages[status as keyof typeof statusMessages] || `Order status updated to ${status}.`,
+      message: statusMessages[status] || `Order status updated to ${status}.`,
       type: status === 'cancelled' ? 'warning' : 'order',
       actionUrl: `/orders/${orderId}`,
       metadata: { orderId, status, shopName }
@@ -112,7 +112,7 @@ class NotificationService {
     });
   }
 
-  async notifyPaymentReceived(orderId: string, amount: number, currency: string = 'MMK'): Promise<boolean> {
+  async notifyPaymentReceived(orderId: string, amount: number, currency = 'MMK'): Promise<boolean> {
     return this.notify({
       title: 'Payment Received',
       message: `Payment of ${amount} ${currency} has been received for your order.`,

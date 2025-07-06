@@ -23,6 +23,7 @@ interface NotificationContextType {
   markAllAsRead: () => void;
   removeNotification: (id: string) => void;
   clearAll: () => void;
+  refreshNotifications: () => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -46,11 +47,11 @@ export default function NotificationProvider({ children }: NotificationProviderP
   // Load notifications from localStorage on mount
   useEffect(() => {
     if (isAuthenticated && user) {
-      const savedNotifications = localStorage.getItem(`notifications_${user.id}`);
+      const savedNotifications = localStorage.getItem(`notifications_${user.sub}`);
       if (savedNotifications) {
         try {
-          const parsed = JSON.parse(savedNotifications);
-          setNotifications(parsed.map((n: any) => ({
+          const parsed: Notification[] = JSON.parse(savedNotifications);
+          setNotifications(parsed.map((n) => ({
             ...n,
             timestamp: new Date(n.timestamp)
           })));
@@ -64,7 +65,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
   // Save notifications to localStorage whenever they change
   useEffect(() => {
     if (isAuthenticated && user && notifications.length > 0) {
-      localStorage.setItem(`notifications_${user.id}`, JSON.stringify(notifications));
+      localStorage.setItem(`notifications_${user.sub}`, JSON.stringify(notifications));
     }
   }, [notifications, isAuthenticated, user]);
 
@@ -84,7 +85,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
       const response = await fetch('/api/notifications');
       if (response.ok) {
         const data = await response.json();
-        setNotifications(data.notifications.map((n: any) => ({
+        setNotifications(data.notifications.map((n: Notification) => ({
           ...n,
           timestamp: new Date(n.timestamp)
         })));
@@ -127,8 +128,9 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
     // Update on server
     if (isAuthenticated) {
-      fetch(`/api/notifications/${id}/read`, {
-        method: 'PATCH'
+      fetch(`/api/notifications`, {
+        method: 'PATCH',
+        body: JSON.stringify({ notificationId: id, read: true }),
       }).catch(error => console.error('Error marking notification as read:', error));
     }
   };
@@ -140,8 +142,9 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
     // Update on server
     if (isAuthenticated) {
-      fetch('/api/notifications/mark-all-read', {
-        method: 'PATCH'
+      fetch('/api/notifications', {
+        method: 'PATCH',
+        body: JSON.stringify({ markAllAsRead: true }),
       }).catch(error => console.error('Error marking all notifications as read:', error));
     }
   };
@@ -151,7 +154,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
     // Remove from server
     if (isAuthenticated) {
-      fetch(`/api/notifications/${id}`, {
+      fetch(`/api/notifications?id=${id}`, {
         method: 'DELETE'
       }).catch(error => console.error('Error removing notification:', error));
     }
@@ -162,10 +165,14 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
     // Clear on server
     if (isAuthenticated) {
-      fetch('/api/notifications', {
+      fetch('/api/notifications?clearAll=true', {
         method: 'DELETE'
       }).catch(error => console.error('Error clearing notifications:', error));
     }
+  };
+
+  const refreshNotifications = async () => {
+    await fetchNotifications();
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -177,7 +184,8 @@ export default function NotificationProvider({ children }: NotificationProviderP
     markAsRead,
     markAllAsRead,
     removeNotification,
-    clearAll
+    clearAll,
+    refreshNotifications,
   };
 
   return (

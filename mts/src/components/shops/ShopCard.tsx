@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image';
 
 interface ShopCardProps {
   shop: {
@@ -20,9 +21,11 @@ const ShopCard: React.FC<ShopCardProps> = ({ shop }) => {
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="h-48 bg-gray-300 relative">
           {shop.imageUrl ? (
-            <img 
-              src={shop.imageUrl} 
-              alt={shop.name} 
+            <Image
+              src={shop.imageUrl}
+              alt={shop.name}
+              width={300}
+              height={192}
               className="w-full h-full object-cover"
             />
           ) : (
