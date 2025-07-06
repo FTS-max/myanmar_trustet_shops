@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import dbConnect from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
-import { getSession } from '@auth0/nextjs-auth0';
+import { getSession } from '@auth0/nextjs-auth0/server';
 
 interface Notification {
   _id?: ObjectId;
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     const unreadOnly = searchParams.get('unreadOnly') === 'true';
     const skip = (page - 1) * limit;
 
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     const collection = db.collection<Notification>('notifications');
 
     const filter: any = { userId: session.user.sub };
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     const collection = db.collection<Notification>('notifications');
 
     const notification: Notification = {
@@ -125,7 +125,7 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
     const { notificationId, read, markAllAsRead } = body;
 
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     const collection = db.collection<Notification>('notifications');
 
     if (markAllAsRead) {
@@ -185,7 +185,7 @@ export async function DELETE(request: NextRequest) {
     const notificationId = searchParams.get('id');
     const clearAll = searchParams.get('clearAll') === 'true';
 
-    const { db } = await connectToDatabase();
+    const { db } = await dbConnect();
     const collection = db.collection<Notification>('notifications');
 
     if (clearAll) {
