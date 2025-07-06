@@ -6,8 +6,15 @@ import Link from 'next/link';
 import ShopDetailWithMap from '@/components/ShopDetail/ShopDetailWithMap';
 import { getShopById } from '@/lib/data';
 
+// Define the props type for the page component
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
 // Shop detail page component
-const ShopDetailPage = ({ params }: { params: { id: string } }) => {
+const ShopDetailPage = ({ params }: PageProps) => {
   // Get shop directly from our data store
   const shop = getShopById(params.id);
 
