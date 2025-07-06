@@ -5,6 +5,8 @@ import AuthButtons from "@/components/auth/AuthButtons";
 import AuthProvider from "@/components/auth/AuthProvider";
 import NotificationProvider from "@/components/notifications/NotificationProvider";
 import NotificationBell from "@/components/notifications/NotificationBell";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -62,6 +64,8 @@ export default function RootLayout({
             {children}
           </NotificationProvider>
         </AuthProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

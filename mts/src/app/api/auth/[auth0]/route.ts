@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Auth0 login route handler
-export async function GET(req: NextRequest, { params }: { params: { auth0: string } }) {
-  const { auth0 } = params;
+export async function GET(req: NextRequest, context: { params: { auth0: string } }) {
+  const { auth0 } = context.params;
   
   // Handle different auth routes
   switch (auth0) {
