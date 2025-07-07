@@ -7,14 +7,14 @@ import ShopDetailWithMap from '@/components/ShopDetail/ShopDetailWithMap';
 import { getShopById } from '@/lib/data';
 
 // Define the props type for the page component
-interface PageProps {
+type PageProps = {
   params: {
     id: string;
   };
-}
+};
 
 // Shop detail page component
-const ShopDetailPage = ({ params }: PageProps) => {
+const ShopDetailPage = async ({ params }: PageProps) => {
   // Get shop directly from our data store
   const shop = getShopById(params.id);
 
