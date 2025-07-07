@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter } from 'next/font/google';
 import Link from "next/link";
 import AuthButtons from "@/components/auth/AuthButtons";
 import AuthProvider from "@/components/auth/AuthProvider";
@@ -10,8 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
-const geistSans = GeistSans.variable;
-const geistMono = GeistMono.variable;
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: "Myanmar Trusted Shop | Verified Businesses in Myanmar",
@@ -26,9 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={inter.className}>
         <AuthProvider>
           <NotificationProvider>
             <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
