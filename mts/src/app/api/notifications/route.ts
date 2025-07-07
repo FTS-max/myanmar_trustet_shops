@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import { getSession } from '@auth0/nextjs-auth0';
 
 interface Notification {
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
 
     const { db } = await dbConnect();
-    const collection = db.collection<Notification>('notifications');
+    const collection: Collection<Notification> = db.collection('notifications');
 
     const filter: NotificationFilter = { userId: session.user.sub };
     if (unreadOnly) {
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { db } = await dbConnect();
-    const collection = db.collection<Notification>('notifications');
+    const collection: Collection<Notification> = db.collection('notifications');
 
     const notification: Notification = {
       userId: targetUserId || session.user.sub, // Allow creating notifications for other users (admin feature)
@@ -131,7 +131,7 @@ export async function PATCH(request: NextRequest) {
     const { notificationId, read, markAllAsRead } = body;
 
     const { db } = await dbConnect();
-    const collection = db.collection<Notification>('notifications');
+    const collection: Collection<Notification> = db.collection('notifications');
 
     if (markAllAsRead) {
       // Mark all notifications as read for the user
@@ -191,7 +191,7 @@ export async function DELETE(request: NextRequest) {
     const clearAll = searchParams.get('clearAll') === 'true';
 
     const { db } = await dbConnect();
-    const collection = db.collection<Notification>('notifications');
+    const collection: Collection<Notification> = db.collection('notifications');
 
     if (clearAll) {
       // Delete all notifications for the user
