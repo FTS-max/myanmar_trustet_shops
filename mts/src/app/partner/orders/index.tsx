@@ -17,9 +17,44 @@ import {
 } from 'react-icons/fi';
 import Link from 'next/link';
 
+interface Customer {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+interface OrderItem {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+interface ShippingAddress {
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
+
+interface Order {
+  id: string;
+  customer: Customer;
+  orderDate: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  totalAmount: number;
+  items: OrderItem[];
+  shippingAddress: ShippingAddress;
+  shippingFee: number;
+  notes: string;
+}
+
 const OrdersPage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
@@ -224,7 +259,7 @@ const OrdersPage = () => {
   }, []);
 
   // Format currency in MMK
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-MM', {
       style: 'currency',
       currency: 'MMK',
@@ -233,13 +268,13 @@ const OrdersPage = () => {
   };
 
   // Format date
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   // Get status icon and color
-  const getStatusDetails = (status) => {
+  const getStatusDetails = (status: string) => {
     switch (status) {
       case 'pending':
         return { 
@@ -281,25 +316,25 @@ const OrdersPage = () => {
   };
 
   // Handle search
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on new search
   };
 
   // Handle status filter change
-  const handleStatusChange = (e) => {
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusFilter(e.target.value);
     setCurrentPage(1); // Reset to first page on filter change
   };
 
   // Handle date filter change
-  const handleDateChange = (e) => {
+  const handleDateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDateFilter(e.target.value);
     setCurrentPage(1); // Reset to first page on filter change
   };
 
   // Handle sort change
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
   };
 
@@ -356,9 +391,9 @@ const OrdersPage = () => {
       // Apply sorting
       switch (sortBy) {
         case 'newest':
-          return new Date(b.orderDate) - new Date(a.orderDate);
+          return new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime();
         case 'oldest':
-          return new Date(a.orderDate) - new Date(b.orderDate);
+          return new Date(a.orderDate).getTime() - new Date(b.orderDate).getTime();
         case 'amount-high':
           return b.totalAmount - a.totalAmount;
         case 'amount-low':
@@ -375,7 +410,7 @@ const OrdersPage = () => {
   const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   // Loading skeleton
   if (isLoading) {

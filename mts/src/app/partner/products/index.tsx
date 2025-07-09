@@ -13,9 +13,21 @@ import {
 } from 'react-icons/fi';
 import Link from 'next/link';
 
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
+  image: string;
+  createdAt: string;
+  status: string;
+}
+
 const ProductsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
@@ -139,7 +151,7 @@ const ProductsPage = () => {
   }, []);
 
   // Format currency in MMK
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-MM', {
       style: 'currency',
       currency: 'MMK',
@@ -148,12 +160,12 @@ const ProductsPage = () => {
   };
 
   // Handle search
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
   // Handle category filter change
-  const handleCategoryChange = (e) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setCategoryFilter(e.target.value);
   };
 

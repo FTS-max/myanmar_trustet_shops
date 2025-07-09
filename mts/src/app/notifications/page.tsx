@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FiBell, FiCheck, FiTrash2, FiRefreshCw, FiFilter, FiSearch } from 'react-icons/fi';
 import { useNotifications } from '@/components/notifications/NotificationProvider';
 import { formatDistanceToNow } from 'date-fns';
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/navigation';
 
 interface NotificationFilters {

@@ -14,9 +14,39 @@ import {
 } from 'react-icons/fi';
 import Link from 'next/link';
 
+interface Order {
+  id: string;
+  customer: string;
+  amount: number;
+  status: string;
+  date: string;
+}
+
+interface LowStockProduct {
+  id: string;
+  name: string;
+  stock: number;
+  threshold: number;
+}
+
+interface SalesData {
+  date: string;
+  amount: number;
+}
+
+interface DashboardData {
+  totalSales: number;
+  totalOrders: number;
+  totalCustomers: number;
+  totalProducts: number;
+  recentOrders: Order[];
+  lowStockProducts: LowStockProduct[];
+  salesData: SalesData[];
+}
+
 const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState({
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
     totalSales: 0,
     totalOrders: 0,
     totalCustomers: 0,
@@ -70,7 +100,7 @@ const DashboardPage = () => {
   }, []);
 
   // Format currency in MMK
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-MM', {
       style: 'currency',
       currency: 'MMK',
@@ -79,13 +109,13 @@ const DashboardPage = () => {
   };
 
   // Format date
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const formatDate = (dateString: string) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   // Get status color
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
         return 'bg-green-100 text-green-800';

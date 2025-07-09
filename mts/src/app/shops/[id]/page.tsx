@@ -1,5 +1,6 @@
-'use client';
 
+
+// This is a server component
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
