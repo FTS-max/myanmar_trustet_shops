@@ -32,7 +32,7 @@ const ProductsPage = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   // Categories for filter
   const categories = [
@@ -170,12 +170,12 @@ const ProductsPage = () => {
   };
 
   // Handle sort change
-  const handleSortChange = (e) => {
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(e.target.value);
   };
 
   // Open delete confirmation modal
-  const openDeleteModal = (product) => {
+  const openDeleteModal = (product: Product) => {
     setProductToDelete(product);
     setShowDeleteModal(true);
   };
@@ -188,6 +188,7 @@ const ProductsPage = () => {
 
   // Handle product deletion
   const handleDeleteProduct = () => {
+    if (!productToDelete) return;
     // In a real implementation, you would call your API here
     // await fetch(`/api/partner/products/${productToDelete.id}`, { method: 'DELETE' });
     
@@ -212,9 +213,9 @@ const ProductsPage = () => {
       // Apply sorting
       switch (sortBy) {
         case 'newest':
-          return new Date(b.createdAt) - new Date(a.createdAt);
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         case 'oldest':
-          return new Date(a.createdAt) - new Date(b.createdAt);
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         case 'price-high':
           return b.price - a.price;
         case 'price-low':

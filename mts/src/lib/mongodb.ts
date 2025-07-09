@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/myanmar-trusted-shop';
 
@@ -13,7 +13,10 @@ if (!MONGODB_URI) {
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
-let cached = global.mongoose;
+let cached: {
+  conn: Mongoose | null;
+  promise: Promise<Mongoose> | null;
+} = global.mongoose;
 
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };

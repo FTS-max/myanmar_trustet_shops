@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
+import dbConnect from '@/lib/mongodb';
+import mongoose from 'mongoose';
 
 /**
  * API route to test MongoDB connection
@@ -7,10 +8,13 @@ import connectToDatabase from '@/lib/mongodb';
 export async function GET() {
   try {
     // Connect to the database
-    const { db } = await connectToDatabase();
+    await dbConnect();
     
+    if (!mongoose.connection.db) {
+      throw new Error("Database not connected");
+    }
     // Check if we can get the admin database
-    const adminDb = db.admin();
+    const adminDb = mongoose.connection.db.admin();
     const result = await adminDb.serverStatus();
     
     // Return success response
