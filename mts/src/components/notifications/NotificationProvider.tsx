@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 interface Notification {
   id: string;
@@ -42,7 +42,8 @@ interface NotificationProviderProps {
 
 export default function NotificationProvider({ children }: NotificationProviderProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useUser();
+  const isAuthenticated = !!user;
 
   // Load notifications from localStorage on mount
   useEffect(() => {

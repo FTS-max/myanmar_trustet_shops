@@ -34,7 +34,11 @@ export async function GET(request: NextRequest) {
     const unreadOnly = searchParams.get('unreadOnly') === 'true';
     const skip = (page - 1) * limit;
 
-    const { db } = await dbConnect();
+    const mongoose = await dbConnect();
+    const db = mongoose.connection.db;
+    if (!db) {
+      throw new Error('Database connection not established');
+    }
     const collection = db.collection('notifications');
 
     const filter: NotificationFilter = { userId: session.user.sub };
@@ -92,7 +96,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { db } = await dbConnect();
+    const mongoose = await dbConnect();
+    const db = mongoose.connection.db;
+    if (!db) {
+      throw new Error('Database connection not established');
+    }
     const collection = db.collection('notifications');
 
     const notification: Notification = {
@@ -130,7 +138,11 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json();
     const { notificationId, read, markAllAsRead } = body;
 
-    const { db } = await dbConnect();
+    const mongoose = await dbConnect();
+    const db = mongoose.connection.db;
+    if (!db) {
+      throw new Error('Database connection not established');
+    }
     const collection = db.collection('notifications');
 
     if (markAllAsRead) {
@@ -190,7 +202,11 @@ export async function DELETE(request: NextRequest) {
     const notificationId = searchParams.get('id');
     const clearAll = searchParams.get('clearAll') === 'true';
 
-    const { db } = await dbConnect();
+    const mongoose = await dbConnect();
+    const db = mongoose.connection.db;
+    if (!db) {
+      throw new Error('Database connection not established');
+    }
     const collection = db.collection('notifications');
 
     if (clearAll) {

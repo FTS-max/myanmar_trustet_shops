@@ -62,7 +62,7 @@ function getTrustLevelDescription(trustLevel: TrustLevel): string {
 }
 
 interface BusinessHours {
-  [key: string]: string;
+  [key: string]: string | undefined;
 }
 
 /**

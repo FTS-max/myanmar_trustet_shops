@@ -10,6 +10,7 @@ export enum TrustLevel {
 
 // Social media links type
 export interface SocialMedia {
+  [key: string]: string | undefined;
   facebook?: string;
   viber?: string;
   telegram?: string;
@@ -49,6 +50,7 @@ export interface Review {
 
 // Business hours type
 export interface BusinessHours {
+  [key: string]: string | undefined;
   monday?: string;
   tuesday?: string;
   wednesday?: string;
